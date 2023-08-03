@@ -36,7 +36,13 @@ object MyModule {
 
   // Exercise 1: Write a function to compute the nth fibonacci number
 
-  def fib(n: Int): Int = ???
+  def fib(n: Int): Int = {
+	def loop(n: Int, prev: Int, curr: Int): Int = {
+	  if (n <= 0) prev
+	  else loop(n-1, curr, prev + curr)
+	}
+	loop(n, 0, 1)
+  }
 
   // This definition and `formatAbs` are very similar..
   private def formatFactorial(n: Int) = {
@@ -140,7 +146,14 @@ object PolymorphicFunctions {
 
   // Exercise 2: Implement a polymorphic function to check whether
   // an `Array[A]` is sorted
-  def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = ???
+  def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = {
+	def loop(n: Int): Boolean = {
+	  if (n + 1 >= as.length) true
+	  else if (!gt(as(n), as(n+1))) false
+	  else loop(n + 1)
+	}
+	loop(0)
+  }
 
   // Polymorphic functions are often so constrained by their type
   // that they only have one implementation! Here's an example:
@@ -175,4 +188,12 @@ object PolymorphicFunctions {
 
   def compose[A,B,C](f: B => C, g: A => B): A => C =
     ???
+
+  // Some examples of anonymous functions:
+  def main(args: Array[String]): Unit = {
+    println(isSorted(Array(1, 2, 3, 4, 5), (x: Int, y: Int) => x <= y))
+    println(isSorted(Array(1, 8, 3, 4, 5), (x: Int, y: Int) => x <= y))
+    println(isSorted(Array(5, 4, 3, 2, 10), (x: Int, y: Int) => x <= y))
+    println(isSorted(Array(1, 20, 3, 4, 5), (x: Int, y: Int) => x <= y))
+  }
 }
