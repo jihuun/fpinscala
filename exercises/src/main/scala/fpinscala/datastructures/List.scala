@@ -50,19 +50,96 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
 
-  def tail[A](l: List[A]): List[A] = ???
+  /* ex3.2: remove first element */
+  def tail[A](l: List[A]): List[A] = l match {
+    case Nil => Nil
+    case Cons(_, t) => t
+  }
 
-  def setHead[A](l: List[A], h: A): List[A] = ???
+  /* ex3.3: replace the first element by h */
+  def setHead[A](l: List[A], h: A): List[A] = l match {
+    case Nil => Nil
+    case Cons(_, t) => Cons(h, t)
+  }
 
-  def drop[A](l: List[A], n: Int): List[A] = ???
+  /* ex3.4: remove first n elements in the List */
+  /* 1 2 3 4 5 */
+  def drop[A](l: List[A], n: Int): List[A] = {
+    if (n <= 0) l
+    else drop(tail(l), n - 1)
+  }
 
-  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = ???
+  /* ex3.5: remove prefix elements if f(A) is true */
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
+    case _ => l
+    case Cons(h, t) => {
+      if (f(h)) dropWhile(t, f)
+      else dropWhile(l, f)
+    }
+  }
 
-  def init[A](l: List[A]): List[A] = ???
+  /* ex3.6: remove the last element */
+  def init[A](l: List[A]): List[A] = l match {
+    case Nil => Nil
+    case Cons(h, Nil) => Nil
+    case Cons(h, t) => Cons(h, init(t))
+  }
 
-  def length[A](l: List[A]): Int = ???
+  /* ex3.9 */
+ /* foldRight 의 시그니처를 확인해서 이해할것 */
+  def length[A](l: List[A]): Int =  {
+    foldRight(l, 0)((_, acc) => acc + 1)
+    //           ^      ^^^
+    //           |      다음 리스트t에 대한 재귀호출: foldRight
+    //           재귀호출의 마지막 리턴값
+  }
+  /*
+  List(1, Cons(2, Cons(3, Cons(4,Nil))))
 
-  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = ???
+  */
 
-  def map[A,B](l: List[A])(f: A => B): List[B] = ???
+  /* ex3.10 */
+  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = l match {
+    case Nil => z
+    case Cons(h, t) => foldLeft(t, f(z, h))(f)
+  }
+  /* ex3.11 */
+  def sum3(ns: List[Int]) =
+    foldLeft(ns, 0)((x, y) => x + y)
+
+  def product3(ns: List[Double]) =
+    foldLeft(ns, 1.0)((x, y) => x * y)
+
+  /* ex3.16 */
+  def add_one1(ns: List[Int]) = ns match {
+    case Nil => ns
+    case Cons(h, t) => Cons(h + 1, add_one(t))
+  }
+  def add_one1(ns: List[Int]) =
+    foldRight(ns, Nil)((h,t) => Cons(h + 1, t)
+
+
+  /* ex 3.18 */
+  def map[A,B](l: List[A])(f: A => B): List[B] =
+    foldRight(l, Nil)((h,t) => Cons(f(h), t)
+
+  def map[A,B](l: List[A])(f: A => B): List[B] = l match {
+    case Nil => Nil
+    case Cons(h, t) => Cons(f(h), map(t)(f))
+  }
+
+  /* ex 3.19 */
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    foldRight(as, Nil)((h,t) => if (f(h)) Cons(h, t) else t)
+
+  /* ex 3.20 */
+  def flatMap[A,B](as: List(A])(f: A => List[B]): List[B] = as match {
+    case Nil => Nil
+    case Cons(h, t) => append(f(h), flatMap(t)(f))
+  }
+
+  def flatMap[A,B](as: List(A])(f: A => List[B]): List[B] =
+    foldRight(as, Nil)((h, t) => append(f(h), t)) // ??
+
+
 }
