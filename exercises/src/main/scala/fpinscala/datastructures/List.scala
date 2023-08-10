@@ -127,6 +127,11 @@ object List { // `List` companion object. Contains functions for creating and wo
     case Nil => Nil
     case Cons(h, t) => Cons(f(h), map(t)(f))
   }
+  // :: 는 Cons 와 같은 기능을 한다. :: 은 cons로 발음한다.
+  def map[A, B](l: List[A])(f: A => B): List[B] = l match {
+    case Nil => Nil
+    case head :: tail => f(head) :: map(tail)(f)
+  }
 
   /* ex 3.19 */
   def filter[A](as: List[A])(f: A => Boolean): List[A] =
@@ -136,6 +141,11 @@ object List { // `List` companion object. Contains functions for creating and wo
   def flatMap[A,B](as: List(A])(f: A => List[B]): List[B] = as match {
     case Nil => Nil
     case Cons(h, t) => append(f(h), flatMap(t)(f))
+  }
+  // ::: 은 append 와 같은 기능을 한다.
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = as match {
+    case Nil => Nil
+    case head :: tail => f(head) ::: flatMap(tail)(f)
   }
 
   def flatMap[A,B](as: List(A])(f: A => List[B]): List[B] =
